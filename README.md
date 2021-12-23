@@ -49,7 +49,7 @@ The recipient *p* processes *M* to recover all of the pertinent messages with hi
     - Key size: ~99MB
     - Detector running time: ~0.03 sec/msg
     - Recipient running time: 5ms
-    - Digest size: ~560KB
+    - Digest size: ~280KB
 
 ### Oblivious Message Retrieval
 - Obliviously identify the pertinent messages and pack all their contents into a into a single digest.
@@ -60,6 +60,7 @@ The recipient *p* processes *M* to recover all of the pertinent messages with hi
     - detector running time (2-core): ~0.108 sec/msg and ~0.123 sec/msg
     - detector running time (4-core): ~0.099 sec/msg and ~0.115 sec/msg
     - recipient running time: ~0.02 sec and ~0.063 sec
+    - Digest size: ~560KB
 
 
 ### Parameters 
