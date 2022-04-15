@@ -107,15 +107,20 @@ void decodeIndicesRandom(map<int, int>& pertinentIndices, const vector<vector<Ci
 }
 
 // Construct the RHS of the equations
-void formRhs(vector<vector<int>>& rhs, const Ciphertext& packedPayloads, const SecretKey& secret_key, const size_t& degree, const SEALContext& context,
+void formRhs(vector<vector<int>>& rhs, const vector<Ciphertext>& packedPayloads, const SecretKey& secret_key, const size_t& degree, const SEALContext& context,
                          const int num_of_buckets = 64, const int payloadSlots = 306){ // or 306
     Decryptor decryptor(context, secret_key);
     BatchEncoder batch_encoder(context);
-    vector<uint64_t> rhsint(degree);
-    Plaintext plain_result;
-    decryptor.decrypt(packedPayloads, plain_result);
-    batch_encoder.decode(plain_result, rhsint);
-
+    vector<uint64_t> rhsint;
+    
+    for(size_t i = 0; i < packedPayloads.size(); i++){
+        vector<uint64_t> temp(degree);
+        Plaintext plain_result;
+        decryptor.decrypt(packedPayloads[i], plain_result);
+        batch_encoder.decode(plain_result, temp);
+        rhsint.insert(rhsint.end(), temp.begin(), temp.end());
+    }
+    
     rhs.resize(num_of_buckets);
     for(int i = 0; i < num_of_buckets; i++){
         rhs[i].resize(payloadSlots, 0);

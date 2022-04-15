@@ -6,6 +6,7 @@
 #include "global.h"
 using namespace seal;
 
+
 // takes a vector of ciphertexts, and mult them all together result in the first element of the vector
 // depth optimal using tree-shaped method
 inline
@@ -52,7 +53,7 @@ void innerSum_inplace(Ciphertext& output, const GaloisKeys& gal_keys, const size
 }
 
 // Takes one SIC compressed and expand then into SIC's each encrypt 0/1 in slots up to toExpandNum
-void expandSIC(vector<Ciphertext>& expanded, Ciphertext& toExpand, const GaloisKeys& gal_keys,
+void expandSIC(vector<Ciphertext>& expanded, Ciphertext& toExpand, const GaloisKeys& gal_keys, const GaloisKeys& gal_keys_lower,
                 const size_t& degree, const SEALContext& context, const SEALContext& context2, const size_t& toExpandNum, const size_t& start = 0){ 
     BatchEncoder batch_encoder(context);
     Evaluator evaluator(context);
@@ -78,7 +79,7 @@ void expandSIC(vector<Ciphertext>& expanded, Ciphertext& toExpand, const GaloisK
 	    evaluator.mod_switch_to_next_inplace(expanded[i]);
 	    evaluator.mod_switch_to_next_inplace(expanded[i]);
         // populate to all slots
-        innerSum_inplace(expanded[i], gal_keys_last, degree, degree, context2); 
+        innerSum_inplace(expanded[i], gal_keys_lower, degree, degree, context2); 
     }
 }
 

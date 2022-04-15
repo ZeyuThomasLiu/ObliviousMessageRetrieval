@@ -1,3 +1,4 @@
+#pragma once
 #include "seal/seal.h"
 using namespace seal;
 
@@ -12,7 +13,7 @@ vector<vector<int>> weights_glb;
 int repeatition_glb = 5;
 int seed_glb = 3;
 size_t C_glb = 5;
-int numOfTransactions_glb = 1<<19;
+int numOfTransactions_glb = 32768;
 size_t poly_modulus_degree_glb = 32768;
 size_t num_of_pertinent_msgs_glb = 50; 
 vector<uint64_t> expectedIndices;

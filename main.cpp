@@ -74,7 +74,7 @@ void serverOperations2therest(Ciphertext& lhs, vector<vector<int>>& bipartite_ma
     for(int i = counter; i < counter+numOfTransactions; i += step){
         vector<Ciphertext> expandedSIC;
         // step 1. expand PV
-        expandSIC(expandedSIC, packedSIC, gal_keys, int(degree), context, context2, step, i-counter);
+        expandSIC(expandedSIC, packedSIC, gal_keys, gal_keys_last, int(degree), context, context2, step, i-counter);
 
         // transform to ntt form for better efficiency especially for the last two steps
         for(size_t j = 0; j < expandedSIC.size(); j++)
@@ -111,7 +111,7 @@ void serverOperations3therest(vector<vector<Ciphertext>>& lhs, vector<Ciphertext
     for(int i = counter; i < counter+numOfTransactions; i += step){
         // step 1. expand PV
         vector<Ciphertext> expandedSIC;
-        expandSIC(expandedSIC, packedSIC, gal_keys, int(degree), context, context2, step, i-counter);
+        expandSIC(expandedSIC, packedSIC, gal_keys, gal_keys_last, int(degree), context, context2, step, i-counter);
         // transform to ntt form for better efficiency for all of the following steps
         for(size_t j = 0; j < expandedSIC.size(); j++)
             if(!expandedSIC[j].is_ntt_form())
@@ -153,11 +153,13 @@ vector<vector<long>> receiverDecoding(Ciphertext& lhsEnc, vector<vector<int>>& b
 
     // 2. forming rhs
     vector<vector<int>> rhs;
-    formRhs(rhs, rhsEnc, secret_key, degree, context, OMRtwoM);
+    vector<Ciphertext> rhsEncVec{rhsEnc};
+    formRhs(rhs, rhsEncVec, secret_key, degree, context, OMRtwoM);
 
     // 3. forming lhs
     vector<vector<int>> lhs;
-    formLhsWeights(lhs, pertinentIndices, bipartite_map_glb, weights_glb, 0, OMRtwoM);
+    vector<Ciphertext> rhsEncVec{rhsEnc};
+    formRhs(rhs, rhsEncVec, secret_key, degree, context, OMRthreeM);
 
     // 4. solving equation
     auto newrhs = equationSolving(lhs, rhs, payloadSize);
