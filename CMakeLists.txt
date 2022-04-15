@@ -1,5 +1,4 @@
 cmake_minimum_required (VERSION 3.5.1)
-
 ### To use gcc/g++ on a Macintosh, you must set the Compilers
 ### here, not inside the project
 ##if(APPLE)
@@ -42,4 +41,5 @@ else()
 endif()
 
 add_executable( OMRdemos main.cpp )
+
 target_link_libraries(OMRdemos SEAL::seal ntl m gmp stdc++fs)

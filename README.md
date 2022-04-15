@@ -47,8 +47,9 @@ The recipient *p* processes *M* to recover all of the pertinent messages with hi
 - Schemes benchmarked: OMD1p (section 7.2)
 - Measured
     - Key size: ~99MB
-    - Detector running time: ~0.03 sec/msg
-    - Recipient running time: 5ms
+    - Detector running time, with Intel-HEXL: ~0.021 sec/msg
+    - Detector running time, w/o  Intel-HEXL: ~0.030 sec/msg
+    - Recipient running time: ~0.005 sec
     - Digest size: ~280KB
 
 ### Oblivious Message Retrieval
@@ -56,9 +57,12 @@ The recipient *p* processes *M* to recover all of the pertinent messages with hi
 - Schemes benchmarked: OMR1p (section 7.4) and OMR2p (section 7.5)
 - Measured: 
     - Key sizes: ~129MB
-    - detector running time (1-core): ~0.215 sec/msg and ~0.246 sec/msg
-    - detector running time (2-core): ~0.108 sec/msg and ~0.123 sec/msg
-    - detector running time (4-core): ~0.099 sec/msg and ~0.115 sec/msg
+    - detector running time (1-core, with Intel-HEXL): ~0.145 sec/msg and ~0.155 sec/msg
+    - detector running time (2-core, with Intel-HEXL): ~0.075 sec/msg and ~0.085 sec/msg
+    - detector running time (4-core, with Intel-HEXL): ~0.065 sec/msg and ~0.072 sec/msg
+    - detector running time (1-core, w/o  Intel-HEXL): ~0.215 sec/msg and ~0.246 sec/msg
+    - detector running time (2-core, w/o  Intel-HEXL): ~0.108 sec/msg and ~0.123 sec/msg
+    - detector running time (4-core, w/o  Intel-HEXL): ~0.099 sec/msg and ~0.115 sec/msg
     - recipient running time: ~0.02 sec and ~0.063 sec
     - Digest size: ~560KB
 
@@ -75,6 +79,7 @@ The OMR library relies on the following:
 - [SEAL](https://github.com/microsoft/SEAL) library 3.6 or 3.7 and all its dependencies
 - [PALISADE](https://gitlab.com/palisade/palisade-release) library release v1.11.2 and all its dependencies (as v1.11.2 is not publicly available anymore when this repository is made public, we use v1.11.3 in the instructions instead)
 - [NTL](https://libntl.org/) library 11.4.3 and all its dependencies
+- (Optional) [HEXL](https://github.com/intel/hexl) library 1.2.3
 
 ### Scripts to install the dependencies and build the binary
 ```
@@ -93,9 +98,18 @@ cmake .. -DCMAKE_INSTALL_PREFIX=$LIBDIR
 make -j
 make install
 
+# Optional
+git clone --branch 1.2.3 https://github.com/intel/hexl
+cd hexl
+cmake -S . -B build -DCMAKE_INSTALL_PREFIX=$LIBDIR
+cmake --build build
+cmake --install build
+
 git clone -b 3.6.6 https://github.com/microsoft/SEAL
 cd SEAL
-cmake -S . -B build -DCMAKE_INSTALL_PREFIX=$LIBDIR
+cmake -S . -B build -DCMAKE_INSTALL_PREFIX=$LIBDIR \
+-DSEAL_USE_INTEL_HEXL=ON 
+
 cmake --build build
 cmake --install build
 
