@@ -7,6 +7,9 @@ int main(){
 
     int numPerti = 10; // Number of pertinent messages for tests
 
+    // Create Database
+    createDatabase(numOfTransactions, 306);
+
     // Initialize parameters
     PublicParams testParam = initializeParameters(numOfTransactions, 612, numBuckets, numRep);
 
